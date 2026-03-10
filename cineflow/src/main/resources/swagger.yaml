@@ -1,0 +1,107 @@
+openapi: 3.0.3
+info:
+  title: CineFlow API - Sistema de Gestão de Cinema
+  description: |-
+    API para controle de sessões, filmes e venda de ingressos. 
+    Integração com RabbitMQ para processamento de vendas e Spring Security para proteção de endpoints administrativos.
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/api/v1
+
+tags:
+  - name: Ingressos
+    description: Operações de compra e consulta de status
+  - name: Administrativo
+    description: Gestão de salas, filmes e elenco (Atores/Papéis)
+
+paths:
+  /ingressos:
+    post:
+      tags:
+        - Ingressos
+      summary: Realiza a compra de um ingresso
+      description: Envia o pedido para uma fila no RabbitMQ. Retorna um protocolo para consulta.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IngressoRequest'
+      responses:
+        '202':
+          description: Aceito para processamento (Fila RabbitMQ)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusProcessamento'
+        '400':
+          description: Sessão lotada ou encerrada
+        '401':
+          description: Não autenticado
+
+  /admin/filmes:
+    post:
+      tags:
+        - Administrativo
+      summary: Cadastra um novo filme
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Filme'
+      responses:
+        '201':
+          description: Filme criado com sucesso
+        '403':
+          description: Acesso negado (Requer ROLE_ADMIN)
+
+components:
+  schemas:
+    IngressoRequest:
+      type: object
+      properties:
+        sessaoId:
+          type: integer
+          example: 101
+        tipo:
+          type: string
+          enum: [INTEIRA, MEIA]
+          example: MEIA
+        clienteId:
+          type: integer
+          example: 550
+
+    StatusProcessamento:
+      type: object
+      properties:
+        protocolo:
+          type: string
+          example: "abc-123-xyz"
+        status:
+          type: string
+          example: "PROCESSANDO"
+
+    Filme:
+      type: object
+      properties:
+        titulo:
+          type: string
+          example: "Batman"
+        duracao:
+          type: integer
+          description: Duração em minutos
+          example: 175
+        generoId:
+          type: integer
+          example: 1
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
