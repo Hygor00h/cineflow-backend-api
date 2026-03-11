@@ -15,6 +15,38 @@ tags:
     description: Gestão de salas, filmes e elenco (Atores/Papéis)
 
 paths:
+  /auth/cadastro:
+    post:
+      tags:
+        - Auth
+      summary: Criar uma nova conta de cliente
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UsuarioCadastro'
+      responses:
+        '201':
+          description: Usuário criado com sucesso.
+  /auth/login:
+    post:
+      tags:
+        - Auth
+      summary: Autentica o usuário e retorna um Token
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Login realizado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+        '401':
+          description: E-mail ou senha inválidos
   /ingressos:
     post:
       tags:
@@ -62,6 +94,40 @@ paths:
 
 components:
   schemas:
+    UsuarioCadastro:
+      type: object
+      required:
+        - nome
+        - email
+        - senha
+      properties:
+        nome:
+          type: string
+          example: "Hygor Dev"
+        email:
+          type: string
+          format: email
+          example: "hygor@email.com"
+        senha:
+          type: string
+          format: password
+          example: "senha123"
+
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - senha
+      properties:
+        email:
+          type: string
+          format: email
+          example: "admin@cineflow.com"
+        senha:
+          type: string
+          format: password
+          example: "admin123"
+
     IngressoRequest:
       type: object
       properties:
@@ -99,6 +165,21 @@ components:
         generoId:
           type: integer
           example: 1
+
+    TokenResponse:
+      type: object
+      properties:
+        accessToken:
+          type: string
+          description: "O token JWT para ser usado no cabeçalho Authorization"
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        tipo:
+          type: string
+          example: "Bearer"
+        expiresIn:
+          type: integer
+          description: "Tempo para expirar em segundos"
+          example: 3600
 
   securitySchemes:
     bearerAuth:

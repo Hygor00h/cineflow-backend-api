@@ -1,0 +1,29 @@
+services:
+  db:
+    image:  postgres:15-alpine
+    container_name: cineflow_db
+    restart: always
+    environment:
+      POSTGRES_DB: cineflow_db
+      POSTGRES_USER: hygor_dev
+      POSTGRES_PASSWORD: password123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: cineflow_mq
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: quest
+
+volumes:
+  postgres_data:
+
+
