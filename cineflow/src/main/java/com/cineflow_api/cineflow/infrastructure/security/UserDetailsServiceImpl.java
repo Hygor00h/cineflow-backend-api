@@ -1,7 +1,8 @@
 package com.cineflow_api.cineflow.infrastructure.security;
 
-import com.javanauta.aprendendospring.infrastructure.entity.Usuario;
-import com.javanauta.aprendendospring.infrastructure.repository.UsuarioRepository;
+
+import com.cineflow_api.cineflow.infrastructure.model.Usuarios;
+import com.cineflow_api.cineflow.infrastructure.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -19,7 +20,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         // Busca o usuário no banco de dados pelo e-mail
-        Usuario usuario = usuarioRepository.findByEmail(email)
+        Usuarios usuario = usuarioRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado: " + email));
 
         // Cria e retorna um objeto UserDetails com base no usuário encontrado
