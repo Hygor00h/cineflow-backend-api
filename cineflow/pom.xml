@@ -120,20 +120,21 @@
 					<source>${java.version}</source>
 					<target>${java.version}</target>
 					<annotationProcessorPaths>
-						<path>
-							<groupId>org.mapstruct</groupId>
-							<artifactId>mapstruct-processor</artifactId>
-							<version>${org.mapstruct.version}</version>
-						</path>
+
 						<path>
 							<groupId>org.projectlombok</groupId>
 							<artifactId>lombok</artifactId>
 							<version>${lombok.version}</version>
 						</path>
+<!--						<path>-->
+<!--							<groupId>org.projectlombok</groupId>-->
+<!--							<artifactId>lombok-mapstruct-binding</artifactId>-->
+<!--							<version>0.2.0</version>-->
+<!--						</path>-->
 						<path>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok-mapstruct-binding</artifactId>
-							<version>0.2.0</version>
+							<groupId>org.mapstruct</groupId>
+							<artifactId>mapstruct-processor</artifactId>
+							<version>${org.mapstruct.version}</version>
 						</path>
 
 					</annotationProcessorPaths>
@@ -150,20 +151,37 @@
 							<goal>generate</goal>
 						</goals>
 						<configuration>
-							<inputSpec>
-								${project.basedir}/src/main/resources/swagger.yaml
-							</inputSpec>
+							<inputSpec>src/main/resources/swagger.yaml</inputSpec>
 							<generatorName>spring</generatorName>
 							<apiPackage>com.exemplo.api</apiPackage>
 							<modelPackage>com.exemplo.model</modelPackage>
-							<output>${project.build.directory}/generated-sources/openapi</output>
 							<configOptions>
-								<sourceFolder>target/generated-sources</sourceFolder>
 								<delegatePattern>true</delegatePattern>
 								<interfaceOnly>true</interfaceOnly>
 								<useJakartaEe>true</useJakartaEe>
 								<useSpringBoot3>true</useSpringBoot3>
 							</configOptions>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>3.5.0</version>
+				<executions>
+					<execution>
+						<id>add-source</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>add-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>${project.build.directory}/generated-sources/openapi/src/main/java</source>
+							</sources>
 						</configuration>
 					</execution>
 				</executions>
