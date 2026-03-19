@@ -1,0 +1,18 @@
+package com.cineflow_api.cineflow.infrastructure.repository;
+
+import com.cineflow_api.cineflow.infrastructure.model.Usuarios;
+import org.springframework.data.jdbc.repository.query.Query;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
+
+
+import java.util.Optional;
+
+@Repository
+public interface UsuarioRepository extends CrudRepository<Usuarios, Integer> {
+
+	@Query("SELECT * FROM usuarios WHERE email = :email")
+	Optional<Usuarios> findByEmail(String email);
+
+	Boolean existsByEmail(String email);
+}
