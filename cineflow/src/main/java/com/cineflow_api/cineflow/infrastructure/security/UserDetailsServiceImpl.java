@@ -1,6 +1,7 @@
 package com.cineflow_api.cineflow.infrastructure.security;
 
 
+
 import com.cineflow_api.cineflow.infrastructure.model.Usuarios;
 import com.cineflow_api.cineflow.infrastructure.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         // Cria e retorna um objeto UserDetails com base no usuário encontrado
         return org.springframework.security.core.userdetails.User
                 .withUsername(usuario.getEmail()) // Define o nome de usuário como o e-mail
-                .password(usuario.getSenha()) // Define a senha do usuário
+                .password(usuario.getPassword()) // Define a senha do usuário
+                .authorities(usuario.getRole().getRole())
                 .build(); // Constrói o objeto UserDetails
     }
 }
