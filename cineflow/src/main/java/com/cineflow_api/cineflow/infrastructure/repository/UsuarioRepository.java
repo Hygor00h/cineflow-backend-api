@@ -7,12 +7,15 @@ import org.springframework.stereotype.Repository;
 
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
-public interface UsuarioRepository extends CrudRepository<Usuarios, Integer> {
+public interface UsuarioRepository extends CrudRepository<Usuarios, UUID> {
 
-	@Query("SELECT * FROM usuarios WHERE email = :email")
-	Optional<Usuarios> findByEmail(String email);
+//	@Query("SELECT * FROM usuarios WHERE email = :email")
+//	Optional<Usuarios> findByEmail(String email);
 
 	Boolean existsByEmail(String email);
+
+	Optional<Usuarios> findByEmail(String email);
 }
